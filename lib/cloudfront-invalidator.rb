@@ -33,7 +33,7 @@ class CloudfrontInvalidator
     body = xml_body(keys)
 
     delay = 1
-    begin
+    #begin
       resp = http.send_request 'POST', uri.path, body, headers
       doc = REXML::Document.new resp.body
 
@@ -45,12 +45,12 @@ class CloudfrontInvalidator
       end
 
     # Handle the common case of too many in progress by waiting until the others finish.
-    rescue TooManyInvalidationsInProgress => e
-      sleep delay * BACKOFF_DELAY
-      delay *= 2 unless delay >= BACKOFF_LIMIT
-      STDERR.puts e.inspect
-      retry
-    end
+#    rescue TooManyInvalidationsInProgress => e
+#      sleep delay * BACKOFF_DELAY
+#      delay *= 2 unless delay >= BACKOFF_LIMIT
+#      STDERR.puts e.inspect
+#      retry
+#    end
 
     # If we are passed a block, poll on the status of this invalidation with truncated exponential backoff.
     if block_given?
